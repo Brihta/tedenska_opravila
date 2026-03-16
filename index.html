@@ -432,6 +432,8 @@ function generatePrint(){
   const pktW=22;
   const childW=((100-pktW)/valid.length).toFixed(1);
 
+  const totalAll = valid.reduce((s,ch)=>s+ch.chores.filter(c=>c.enabled).reduce((a,c)=>a+c.days.length,0),0);
+
   const pktCol=`<div class="col col-pkt" style="width:${pktW}%">
     <div class="col-hdr hdr-lav">Opravila</div>
     <div class="pkt-box">
@@ -442,13 +444,14 @@ function generatePrint(){
       <p class="pkt-bold">Za vsako neopravljeno delo se odšteje ${ded.toFixed(2)} €.</p>
     </div>
     <div class="skupaj-wrap">
-      <div class="skupaj-bar">Skupaj kljukic:</div>
+      <div class="skupaj-bar">Skupaj vseh opravil: ${totalAll}</div>
       <div class="pig-row"><span class="pig-em">💰</span><span class="pig-line"></span></div>
     </div>
   </div>`;
 
   const childCols=valid.map(ch=>{
     const active=ch.chores.filter(c=>c.enabled);
+    const childTotal=active.reduce((s,c)=>s+c.days.length,0);
     const cards=active.map(c=>{
       const dayBoxes=c.days.map(di=>`
         <div class="day-row-item">
@@ -465,7 +468,7 @@ function generatePrint(){
       <div class="col-hdr hdr-grn">${esc(ch.name)}</div>
       ${cards}
       <div class="skupaj-wrap">
-        <div class="skupaj-bar">Skupaj kljukic:</div>
+        <div class="skupaj-bar">Skupaj vseh opravil: ${childTotal}</div>
         <div class="pig-row"><span class="pig-em">💰</span><span class="pig-line"></span></div>
       </div>
     </div>`;
@@ -490,11 +493,11 @@ function generatePrint(){
 body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .page{padding:1mm;display:flex;flex-direction:column;min-height:277mm}
 .pg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5mm;padding-bottom:3mm;border-bottom:1.5px solid #ccc8bf}
-.t-it{font-style:italic;font-size:26pt;color:#2d3436;font-weight:700;line-height:1}
-.t-bd{font-size:22pt;font-weight:900;color:#2d3436;line-height:1.1}
-.wk-blk{text-align:right;padding-top:3mm}
-.wk-lbl{font-size:8.5pt;color:#888;font-weight:600;margin-bottom:1mm}
-.wk-val{font-family:'Caveat',cursive;font-size:20pt;font-weight:700;color:#2d3436;border-bottom:2px dotted #888;padding-bottom:1mm;display:inline-block;min-width:28mm}
+.t-it{font-style:italic;font-size:34pt;color:#2d3436;font-weight:700;line-height:1}
+.t-bd{font-size:30pt;font-weight:900;color:#2d3436;line-height:1.1}
+.wk-blk{text-align:right;padding-top:4mm}
+.wk-lbl{font-size:11pt;color:#666;font-weight:700;margin-bottom:2mm}
+.wk-val{font-family:'Caveat',cursive;font-size:28pt;font-weight:700;color:#2d3436;border-bottom:2px dotted #888;padding-bottom:1mm;display:inline-block;min-width:36mm}
 .columns{display:flex;gap:3mm;align-items:flex-start;flex:1}
 .col{display:flex;flex-direction:column;gap:0}
 .col-pkt{min-height:220mm}

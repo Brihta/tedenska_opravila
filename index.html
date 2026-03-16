@@ -19,8 +19,9 @@ main{max-width:940px;margin:0 auto;padding:36px 18px 80px;display:flex;flex-dire
 .num{background:var(--sage);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:.82rem;font-weight:800;flex-shrink:0}
 .fl{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
 label.lbl{font-weight:700;font-size:.88rem;color:var(--mid);display:block;margin-bottom:5px}
-input[type=text],input[type=number]{padding:9px 13px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--dark);background:var(--cream);outline:none;transition:border-color .2s}
-input:focus{border-color:var(--sage)}
+input[type=text],input[type=number],select,textarea{padding:9px 13px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--dark);background:var(--cream);outline:none;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--sage)}
+textarea{resize:vertical;width:100%;min-height:70px;line-height:1.5}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
 .tab{padding:8px 18px;border-radius:20px;border:2px solid #ddd;background:#f0ebe0;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;color:var(--mid);transition:all .2s;position:relative}
 .tab.active{background:var(--sage);border-color:var(--sage);color:#fff}
@@ -54,13 +55,21 @@ input:focus{border-color:var(--sage)}
 .btn-sm:hover{background:#6a8e6e}
 .pkt-rows{display:flex;flex-direction:column;gap:10px}
 .pkt-r{display:flex;align-items:center;gap:12px}
-.pkt-r input[type=checkbox]{width:19px;height:19px;accent-color:var(--lav);cursor:pointer}
 .pkt-r label{font-weight:700;font-size:.9rem;flex:1}
 .pkt-r input[type=number]{max-width:95px}
-#pkt-extra{display:none;padding-top:14px;flex-direction:column;gap:10px}
 .btn-gen{width:100%;padding:16px;background:linear-gradient(135deg,var(--sage),var(--sage-l));color:#fff;border:none;border-radius:18px;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(122,158,126,.35);transition:transform .15s,box-shadow .15s}
 .btn-gen:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(122,158,126,.4)}
 .notice{background:var(--lav-p);border-left:4px solid var(--lav);border-radius:11px;padding:11px 15px;font-size:.85rem;color:#5a4f8a;font-weight:600}
+
+/* PREGOVOR CARD */
+.preg-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.preg-btn{padding:9px 18px;border-radius:14px;border:2px solid #e0ddd8;background:var(--cream);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;color:var(--dark);transition:all .2s;display:flex;align-items:center;gap:7px}
+.preg-btn:hover{border-color:var(--sage);background:var(--sage-p);color:var(--sage)}
+.preg-btn.active{border-color:var(--sage);background:var(--sage);color:#fff}
+.preg-select-wrap{margin-bottom:14px}
+.preg-select-wrap select{width:100%}
+.preg-preview{background:var(--sage-p);border-left:4px solid var(--sage);border-radius:11px;padding:12px 16px;font-size:.95rem;font-style:italic;color:#2d4a2f;font-weight:600;margin-top:12px;min-height:48px;line-height:1.6}
+.preg-pomen{font-size:.8rem;color:var(--mid);font-style:normal;margin-top:6px;font-weight:600}
 </style>
 </head>
 <body>
@@ -70,14 +79,43 @@ input:focus{border-color:var(--sage)}
 </header>
 <main>
 
+  <!-- KORAK 1 -->
   <div class="card">
     <div class="card-title"><span class="num">1</span> Osnovni podatki</div>
     <div class="fl">
-      <div><label class="lbl">Mesec</label><input type="text" id="inp-month" value="Marec" style="width:140px"></div>
-      <div><label class="lbl">Teden v mesecu</label><select id="inp-week" style="width:130px;padding:9px 13px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--dark);background:var(--cream);outline:none"><option value="">izberi</option><option value="1">1. teden</option><option value="2">2. teden</option><option value="3">3. teden</option><option value="4">4. teden</option><option value="5">5. teden</option></select></div>
+      <div>
+        <label class="lbl">Mesec</label>
+        <select id="inp-month" style="width:150px">
+          <option value="">izberi</option>
+          <option value="Januar">Januar</option>
+          <option value="Februar">Februar</option>
+          <option value="Marec" selected>Marec</option>
+          <option value="April">April</option>
+          <option value="Maj">Maj</option>
+          <option value="Junij">Junij</option>
+          <option value="Julij">Julij</option>
+          <option value="Avgust">Avgust</option>
+          <option value="September">September</option>
+          <option value="Oktober">Oktober</option>
+          <option value="November">November</option>
+          <option value="December">December</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl">Teden v mesecu</label>
+        <select id="inp-week" style="width:150px">
+          <option value="">izberi</option>
+          <option value="1">1. teden</option>
+          <option value="2">2. teden</option>
+          <option value="3">3. teden</option>
+          <option value="4">4. teden</option>
+          <option value="5">5. teden</option>
+        </select>
+      </div>
     </div>
   </div>
 
+  <!-- KORAK 2 -->
   <div class="card">
     <div class="card-title"><span class="num">2</span> Otroci in njihova opravila</div>
     <div class="notice" style="margin-bottom:18px">Za vsakega otroka posebej izberite opravila in dneve. Kliknite na zavihek z imenom otroka da preklopite.</div>
@@ -85,25 +123,165 @@ input:focus{border-color:var(--sage)}
     <div id="child-panel"></div>
   </div>
 
+  <!-- KORAK 3 -->
   <div class="card">
-    <div class="card-title"><span class="num">3</span> Žepnina (neobvezno)</div>
+    <div class="card-title"><span class="num">3</span> Žepnina</div>
     <div class="pkt-rows">
-      <div class="pkt-r"><input type="checkbox" id="pkt-on"><label for="pkt-on">Vključi razdelek o žepnini</label></div>
-      <div id="pkt-extra">
-        <div class="pkt-r"><label for="pkt-amt">Tedenska žepnina (€):</label><input type="number" id="pkt-amt" min="0" step="0.5" value="5"></div>
-        <div class="pkt-r"><input type="checkbox" id="pkt-pen" checked><label for="pkt-pen">Vključi odbitek za neopravljeno opravilo</label></div>
-        <div class="pkt-r" id="pen-amt-row"><label for="pkt-pen-amt">Znesek odbitka (€):</label><input type="number" id="pkt-pen-amt" min="0" step="0.1" value="0.20"></div>
-        <div><label class="lbl" style="margin-top:0">Nedeljski dogovor / opis pravil:</label><input type="text" id="pkt-note" placeholder="npr. Če so vsa opravila narejena, prejmeta 5€." style="width:100%"></div>
-        <div><label class="lbl" style="margin-top:0">Opozorilo (krepko):</label><input type="text" id="pkt-warn" placeholder="npr. Brez opravljenega dela ni žepnine!" style="width:100%"></div>
-        <div><label class="lbl" style="margin-top:0">Besedilo o odbitku (krepko):</label><input type="text" id="pkt-penalty-txt" placeholder="npr. Za vsako opravilo, ki ni narejeno, se odšteje 20 centov." style="width:100%"></div>
+      <div class="pkt-r">
+        <label for="pkt-amt">Tedenska žepnina (€):</label>
+        <input type="number" id="pkt-amt" min="0" step="0.5" value="5" style="max-width:95px" oninput="updatePktPreview()">
       </div>
+      <div class="notice" id="pkt-preview"></div>
     </div>
+  </div>
+
+  <!-- KORAK 4 – PREGOVOR -->
+  <div class="card">
+    <div class="card-title"><span class="num">4</span> Pregovor tedna (neobvezno)</div>
+    <div class="preg-btns">
+      <button class="preg-btn" id="btn-pick" onclick="showMode('pick')">📋 Izberi iz seznama</button>
+      <button class="preg-btn" id="btn-own" onclick="showMode('own')">✏️ Napiši svojega</button>
+      <button class="preg-btn" id="btn-rand" onclick="pickRandom()">🎲 Izberi naključno</button>
+      <button class="preg-btn" id="btn-none" onclick="showMode('none')">✕ Brez pregovora</button>
+    </div>
+
+    <div id="preg-pick-wrap" class="preg-select-wrap" style="display:none">
+      <label class="lbl">Kategorija</label>
+      <select id="preg-cat" onchange="fillPregovorList()" style="margin-bottom:10px">
+        <option value="0">Delo in trud</option>
+        <option value="1">Družina in odnosi</option>
+        <option value="2">Pomoč drugim in sodelovanje</option>
+      </select>
+      <label class="lbl">Pregovor</label>
+      <select id="preg-list" onchange="selectPregovor()"></select>
+    </div>
+
+    <div id="preg-own-wrap" style="display:none">
+      <label class="lbl">Vpiši pregovor</label>
+      <textarea id="preg-own-text" placeholder="npr. Kdor seže visoko, mora trdno stati." oninput="updatePregovorPreview()"></textarea>
+    </div>
+
+    <div id="preg-preview" class="preg-preview" style="display:none"></div>
   </div>
 
   <button class="btn-gen" onclick="generatePrint()">📄 Ustvari PDF za tiskanje</button>
 </main>
 
 <script>
+/* ── PREGOVORI DATA ─────────────────────────────────────────────────────── */
+const PREGOVORI = [
+  { ime:"Delo in trud", seznam:[
+    {t:"Brez muje se še čevelj ne obuje.",p:"Brez truda ni rezultata."},
+    {t:"Rana ura, zlata ura.",p:"Če začneš zgodaj, boš več naredil in se bolje počutil."},
+    {t:"Vaja dela mojstra, če mojster dela vajo.",p:"Nič ne gre od prvega dne, treba je ponavljati."},
+    {t:"Kar lahko storiš danes, ne odlašaj na jutri.",p:"Odlašanje samo kopiči težave."},
+    {t:"Po delu se sladko spi.",p:"Občutek zadovoljstva po opravljeni nalogi je najboljši počitek."},
+    {t:"Pridne roke vse zmorejo.",p:"Z voljo in delom premagamo vsako oviro."},
+    {t:"Kdor ne dela, naj ne jé.",p:"Vsi moramo prispevati k skupnemu dobremu."},
+    {t:"Malo delo, malo kruha; veliko delo, veliko kruha.",p:"Rezultat je sorazmeren s trudom."},
+    {t:"Če ne poseješ, ne boš žel.",p:"Brez vložka na začetku ni uspeha na koncu."},
+    {t:"Leni hodi dvakrat.",p:"Površno delo zahteva popravljanje."},
+    {t:"Kjer je volja, tam je pot.",p:"Z močno željo vedno najdemo način."},
+    {t:"Nobeno delo ni sramotno, sramotno je le lenarjenje.",p:"Vsako delo je častno."},
+    {t:"Zrno do zrna pogača, kamen do kamna palača.",p:"Majhna dejanja se seštejejo v velik uspeh."},
+    {t:"Kdor zgodaj vstaja, mu kruha ostaja.",p:"Zgodnji začetek prinaša obilje."},
+    {t:"Delo krepi človeka.",p:"Z delom postajamo spretnejši in močnejši."},
+    {t:"Železo se kuje, dokler je vroče.",p:"Izkoristi priložnost takoj."},
+    {t:"Dober začetek je pol uspeha.",p:"Prvi korak je ključen."},
+  ]},
+  { ime:"Družina in odnosi", seznam:[
+    {t:"Ljubo doma, kdor ga ima.",p:"Doma smo najbolj varni in ljubljeni."},
+    {t:"Povsod je lepo, a doma je najlepše.",p:"Dom je neprecenljiv."},
+    {t:"Kar se Janezek nauči, to Janez zna.",p:"Znanje iz otroštva ostane za vedno."},
+    {t:"Jabolko ne pade daleč od drevesa.",p:"Otroci so podobni staršem."},
+    {t:"Kri ni voda.",p:"Družinske vezi so izjemno močne."},
+    {t:"Lepa beseda lepo mesto najde.",p:"S prijaznostjo dosežeš več."},
+    {t:"Kar ne želiš, da drugi tebi storijo, ne stori ti drugim.",p:"Zlato pravilo odnosov."},
+    {t:"Tiha voda bregove dere.",p:"Tihi ljudje imajo lahko veliko moč."},
+    {t:"Beseda ni konj.",p:"Besede imajo moč, da ranijo ali pomirijo."},
+    {t:"Sreča je v majhnih stvareh.",p:"Majhni trenutki z družino so največje bogastvo."},
+    {t:"Kdor visoko leta, nizko pade.",p:"Pomembnost skromnosti."},
+    {t:"Dobra beseda nič ne stane, a veliko velja.",p:"Prijaznost je brezplačna, a neprecenljiva."},
+    {t:"Starejše spoštuj, mlajše pa uči.",p:"Spoštovanje in prenos znanja."},
+    {t:"V slogi je moč.",p:"Enotnost nas dela močne."},
+    {t:"Kdor drugega spoštuje, sebe ne ponižuje.",p:"Spoštovanje do drugih dviguje lastno vrednost."},
+    {t:"Oblast je v glavi, ne v pesti.",p:"Razum je pomembnejši od moči."},
+    {t:"Laž ima kratke noge.",p:"Resnica se vedno izve."},
+  ]},
+  { ime:"Pomoč drugim in sodelovanje", seznam:[
+    {t:"Več glav več ve.",p:"Skupinsko razmišljanje prinaša boljše rešitve."},
+    {t:"Roka roko umije.",p:"Vzajemna pomoč je ključna."},
+    {t:"Prijatelja spoznaš v nesreči.",p:"Pravi prijatelji pomagajo v težavah."},
+    {t:"Dobra dela se z dobrim vračajo.",p:"Dobrota se povrne."},
+    {t:"Ena lastovka še ne prinese pomladi.",p:"Za večje spremembe je potrebnih več ljudi."},
+    {t:"Kdor hitro pomaga, dvakrat pomaga.",p:"Takojšnja pomoč je najbolj učinkovita."},
+    {t:"Kar daš, to imaš.",p:"Darovanje osrečuje darovalca."},
+    {t:"Kdor drugim jamo koplje, sam vanjo pade.",p:"Zlobna dejanja se vrnejo storilcu."},
+    {t:"Sloga gradi, nesloga razdira.",p:"Sodelovanje ustvarja, prepir uničuje."},
+    {t:"Dobro delo ne potrebuje hvale.",p:"Pomagamo, ker je to prav, ne za pozornost."},
+    {t:"Prijaznost odpira vsa vrata.",p:"S prijaznostjo je vse lažje."},
+    {t:"Kdor prosi, mu bo dano.",p:"Ni napačno prositi za pomoč."},
+    {t:"S skupnimi močmi se daleč pride.",p:"Sodelovanje omogoča velike dosežke."},
+    {t:"Deli svojo srečo in boš srečnejši.",p:"Deljena sreča je dvojna sreča."},
+    {t:"Biti dober je več kot biti bogat.",p:"Značaj je pomembnejši od denarja."},
+    {t:"Kjer sta dva, je tretjemu lažje.",p:"Druščina olajša težko delo."},
+    {t:"Darovano srce je najboljše darilo.",p:"Iskrena pozornost pomeni največ."},
+    {t:"Svet stoji na dobrih ljudeh.",p:"Dobrota ohranja naš svet."},
+  ]},
+];
+
+let pregMode = 'none'; // 'none' | 'pick' | 'own' | 'random'
+let selectedPregovor = null; // {t, p}
+
+function showMode(mode) {
+  pregMode = mode;
+  document.getElementById('preg-pick-wrap').style.display = mode==='pick' ? 'block' : 'none';
+  document.getElementById('preg-own-wrap').style.display  = mode==='own'  ? 'block' : 'none';
+  ['btn-pick','btn-own','btn-rand','btn-none'].forEach(id => document.getElementById(id).classList.remove('active'));
+  if(mode==='pick') { document.getElementById('btn-pick').classList.add('active'); fillPregovorList(); selectPregovor(); }
+  if(mode==='own')  { document.getElementById('btn-own').classList.add('active');  updatePregovorPreview(); }
+  if(mode==='none') { document.getElementById('btn-none').classList.add('active'); selectedPregovor=null; document.getElementById('preg-preview').style.display='none'; }
+}
+
+function fillPregovorList() {
+  const cat = +document.getElementById('preg-cat').value;
+  const sel = document.getElementById('preg-list');
+  sel.innerHTML = PREGOVORI[cat].seznam.map((p,i) => `<option value="${i}">${p.t}</option>`).join('');
+  selectPregovor();
+}
+
+function selectPregovor() {
+  const cat = +document.getElementById('preg-cat').value;
+  const idx = +document.getElementById('preg-list').value;
+  selectedPregovor = PREGOVORI[cat].seznam[idx];
+  showPregovorPreview(selectedPregovor);
+}
+
+function pickRandom() {
+  const allAll = PREGOVORI.flatMap(k=>k.seznam);
+  selectedPregovor = allAll[Math.floor(Math.random()*allAll.length)];
+  pregMode = 'random';
+  ['btn-pick','btn-own','btn-rand','btn-none'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('btn-rand').classList.add('active');
+  document.getElementById('preg-pick-wrap').style.display='none';
+  document.getElementById('preg-own-wrap').style.display='none';
+  showPregovorPreview(selectedPregovor);
+}
+
+function updatePregovorPreview() {
+  const txt = document.getElementById('preg-own-text').value.trim();
+  selectedPregovor = txt ? {t:txt, p:''} : null;
+  showPregovorPreview(selectedPregovor);
+}
+
+function showPregovorPreview(p) {
+  const el = document.getElementById('preg-preview');
+  if(!p){ el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML = `„${p.t}"${p.p ? `<div class="preg-pomen">💡 ${p.p}</div>` : ''}`;
+}
+
+/* ── CHORES ─────────────────────────────────────────────────────────────── */
 const DAYS=['pon.','tor.','sre.','čet.','pet.','sob.','ned.'];
 const DEF=[
   {emoji:'🍽️',name:'Pomivalni stroj',desc:'Polnjenje in praznjenje'},
@@ -120,8 +298,7 @@ const DEF=[
   {emoji:'🍳',name:'Pomoč pri kuhanju',desc:'Priprava obroka'},
 ];
 function mkChild(){return{name:'',chores:DEF.map(c=>({...c,enabled:false,days:[]}))}}
-let activeTab=0;
-let children=[mkChild()];
+let activeTab=0, children=[mkChild()];
 
 function renderTabs(){
   const bar=document.getElementById('tabs-bar');
@@ -129,9 +306,9 @@ function renderTabs(){
   children.forEach((ch,i)=>{
     const t=document.createElement('button');
     t.className='tab'+(i===activeTab?' active':'');
-    const nameSpan=document.createElement('span');
-    nameSpan.textContent=ch.name||`Otrok ${i+1}`;
-    t.appendChild(nameSpan);
+    const sp=document.createElement('span');
+    sp.textContent=ch.name||`Otrok ${i+1}`;
+    t.appendChild(sp);
     t.addEventListener('click',()=>{activeTab=i;renderTabs();renderPanel();});
     if(children.length>1){
       const x=document.createElement('button');
@@ -145,6 +322,7 @@ function renderTabs(){
   add.className='btn-add-tab';add.textContent='＋ Dodaj otroka';
   add.addEventListener('click',()=>{children.push(mkChild());activeTab=children.length-1;renderTabs();renderPanel();});
   bar.appendChild(add);
+  updatePktPreview();
 }
 
 function renderPanel(){
@@ -182,6 +360,7 @@ function renderPanel(){
     children[activeTab].name=this.value;
     const tabs=document.querySelectorAll('.tab');
     if(tabs[activeTab]){const sp=tabs[activeTab].querySelector('span');if(sp)sp.textContent=this.value||`Otrok ${activeTab+1}`;}
+    updatePktPreview();
   });
   p.querySelectorAll('.chore-head').forEach(el=>{
     el.addEventListener('click',function(e){if(e.target.classList.contains('chore-cb'))return;const ci=+this.dataset.ci;children[activeTab].chores[ci].enabled=!children[activeTab].chores[ci].enabled;renderPanel();});
@@ -190,7 +369,7 @@ function renderPanel(){
     el.addEventListener('change',function(){const ci=+this.dataset.ci;children[activeTab].chores[ci].enabled=this.checked;renderPanel();});
   });
   p.querySelectorAll('[data-all]').forEach(el=>{
-    el.addEventListener('click',function(){const ci=+this.dataset.ci;const ch=children[activeTab].chores[ci];ch.days=ch.days.length===7?[]:[0,1,2,3,4,5,6];renderPanel();});
+    el.addEventListener('click',function(){const ci=+this.dataset.ci;const c=children[activeTab].chores[ci];c.days=c.days.length===7?[]:[0,1,2,3,4,5,6];renderPanel();});
   });
   p.querySelectorAll('[data-di]').forEach(el=>{
     el.addEventListener('click',function(){const ci=+this.dataset.ci;const di=+this.dataset.di;const arr=children[activeTab].chores[ci].days;const idx=arr.indexOf(di);if(idx===-1)arr.push(di);else arr.splice(idx,1);arr.sort((a,b)=>a-b);renderPanel();});
@@ -203,55 +382,79 @@ function renderPanel(){
     children[activeTab].chores.push({emoji:em,name:nm,desc:ds,enabled:true,days:[]});
     renderPanel();
   });
+  updatePktPreview();
 }
-
-document.getElementById('pkt-on').addEventListener('change',function(){
-  document.getElementById('pkt-extra').style.display=this.checked?'flex':'none';
-});
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+function totalTaskDays(){
+  return children.reduce((sum,ch)=>sum+ch.chores.filter(c=>c.enabled).reduce((s,c)=>s+c.days.length,0),0);
+}
+function calcDeduction(amt){
+  const total=totalTaskDays();
+  if(!total)return 0;
+  return Math.floor(amt/total*10)/10;
+}
+function receiveVerb(){
+  const n=children.filter(c=>c.name.trim()).length;
+  if(n===1)return'prejmeš';
+  if(n===2)return'prejmeta';
+  return'prejmete';
+}
+function updatePktPreview(){
+  const amt=parseFloat(document.getElementById('pkt-amt').value)||0;
+  const ded=calcDeduction(amt);
+  const verb=receiveVerb();
+  const total=totalTaskDays();
+  const preview=document.getElementById('pkt-preview');
+  if(!amt){preview.innerHTML='Vnesite znesek žepnine.';return;}
+  preview.innerHTML=
+    `<strong>Nedeljski dogovor:</strong> Če so vsa opravila narejena, ${verb} <strong>${amt.toFixed(2)} €</strong>.<br>`+
+    `<strong>Brez opravljenih del, žepnine ni!</strong><br>`+
+    (total>0
+      ?`<strong>Za vsako neopravljeno delo se odšteje ${ded.toFixed(2)} €.</strong>`+
+        `<span style="font-weight:400;font-size:.8em;color:#7a6aaa"> (${amt.toFixed(2)}€ ÷ ${total} opravil = ${(amt/total).toFixed(4)}€ → zaokroženo navzdol na 0,10€)</span>`
+      :`<em style="color:#a08080">Izberite opravila in dneve za izračun odbitka.</em>`);
+}
+
+/* ── GENERATE ───────────────────────────────────────────────────────────── */
 function generatePrint(){
-  const month=document.getElementById('inp-month').value.trim()||'Marec';
-  const week=document.getElementById('inp-week').value.trim();
+  const month=document.getElementById('inp-month').value||'Marec';
+  const week=document.getElementById('inp-week').value;
   const valid=children.filter(c=>c.name.trim());
-  if(!week){alert('Vnesite številko tedna.');return;}
+  if(!week){alert('Izberite teden.');return;}
   if(!valid.length){alert('Dodajte vsaj enega otroka z imenom.');return;}
   if(valid.every(c=>c.chores.every(ch=>!ch.enabled))){alert('Izberite vsaj eno opravilo.');return;}
 
-  const pktOn=document.getElementById('pkt-on').checked;
   const pktAmt=parseFloat(document.getElementById('pkt-amt').value)||5;
-  const penOn=document.getElementById('pkt-pen').checked;
-  const penAmt=parseFloat(document.getElementById('pkt-pen-amt').value)||0.20;
-  const pktNote=document.getElementById('pkt-note').value.trim();
-  const pktWarn=document.getElementById('pkt-warn').value.trim();
-  const pktPenTxt=document.getElementById('pkt-penalty-txt').value.trim();
-
-  const pktW=pktOn?22:0;
+  const ded=calcDeduction(pktAmt);
+  const verb=receiveVerb();
+  const pktW=22;
   const childW=((100-pktW)/valid.length).toFixed(1);
 
-  let pktCol='';
-  if(pktOn){
-    pktCol=`<div class="col col-pkt" style="width:${pktW}%">
-      <div class="col-hdr hdr-lav">Opravila</div>
-      <div class="pkt-box">
-        <div class="pkt-title">Žepnina</div>
-        <p>Tedenska žepnina je določena na <strong>${pktAmt.toFixed(2)} €</strong>.</p>
-        ${pktNote?`<p style="margin-top:5px">${pktNote}</p>`:''}
-        ${pktWarn?`<p class="pkt-bold">${pktWarn}</p>`:''}
-        ${penOn?(pktPenTxt?`<p class="pkt-bold">${pktPenTxt}</p>`:`<p class="pkt-bold">Za vsako neopravljeno opravilo se odšteje ${penAmt.toFixed(2)} €.</p>`):''}
-      </div>
-      <div class="skupaj-wrap">
-        <div class="skupaj-bar">Skupaj kljukic:</div>
-        <div class="pig-row"><span class="pig-em">🐷</span><span class="pig-line"></span></div>
-      </div>
-    </div>`;
-  }
+  const pktCol=`<div class="col col-pkt" style="width:${pktW}%">
+    <div class="col-hdr hdr-lav">Opravila</div>
+    <div class="pkt-box">
+      <div class="pkt-title">Žepnina</div>
+      <p>Tedenska žepnina je določena na <strong>${pktAmt.toFixed(2)} €</strong>.</p>
+      <p style="margin-top:5px">Nedeljski dogovor:<br>Če so vsa opravila narejena, ${verb} <strong>${pktAmt.toFixed(2)} €</strong>.</p>
+      <p class="pkt-bold">Brez opravljenih del, žepnine ni!</p>
+      <p class="pkt-bold">Za vsako neopravljeno delo se odšteje ${ded.toFixed(2)} €.</p>
+    </div>
+    <div class="skupaj-wrap">
+      <div class="skupaj-bar">Skupaj kljukic:</div>
+      <div class="pig-row"><span class="pig-em">💰</span><span class="pig-line"></span></div>
+    </div>
+  </div>`;
 
   const childCols=valid.map(ch=>{
     const active=ch.chores.filter(c=>c.enabled);
     const cards=active.map(c=>{
-      const dayBoxes=c.days.map(di=>`<div class="day-box">${DAYS[di]}</div>`).join('');
+      const dayBoxes=c.days.map(di=>`
+        <div class="day-row-item">
+          <div class="day-lbl-box">${DAYS[di]}</div>
+          <div class="day-check-box"></div>
+        </div>`).join('');
       return `<div class="chore-card">
         <div class="chore-icon">${c.emoji}</div>
         <div class="chore-txt"><div class="c-name">${esc(c.name)}</div>${c.desc?`<div class="c-desc">${esc(c.desc)}</div>`:''}</div>
@@ -263,10 +466,20 @@ function generatePrint(){
       ${cards}
       <div class="skupaj-wrap">
         <div class="skupaj-bar">Skupaj kljukic:</div>
-        <div class="pig-row"><span class="pig-em">🐷</span><span class="pig-line"></span></div>
+        <div class="pig-row"><span class="pig-em">💰</span><span class="pig-line"></span></div>
       </div>
     </div>`;
   }).join('');
+
+  // Pregovor footer
+  const pregHtml = selectedPregovor
+    ? `<div class="preg-footer">
+        <span class="preg-icon">📖</span>
+        <div class="preg-content">
+          <div class="preg-text">„${selectedPregovor.t}"</div>
+          ${selectedPregovor.p ? `<div class="preg-pomen">${selectedPregovor.p}</div>` : ''}
+        </div>
+      </div>` : '';
 
   const html=`<!DOCTYPE html>
 <html lang="sl"><head><meta charset="UTF-8">
@@ -275,27 +488,29 @@ function generatePrint(){
 @page{size:A4 portrait;margin:10mm}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.page{padding:1mm}
+.page{padding:1mm;display:flex;flex-direction:column;min-height:277mm}
 .pg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5mm;padding-bottom:3mm;border-bottom:1.5px solid #ccc8bf}
-.t-it{font-style:italic;font-size:26pt;color:#2d3436;font-weight:700;line-height:1;font-family:'Nunito',Arial,sans-serif}
+.t-it{font-style:italic;font-size:26pt;color:#2d3436;font-weight:700;line-height:1}
 .t-bd{font-size:22pt;font-weight:900;color:#2d3436;line-height:1.1}
 .wk-blk{text-align:right;padding-top:3mm}
 .wk-lbl{font-size:8.5pt;color:#888;font-weight:600;margin-bottom:1mm}
 .wk-val{font-family:'Caveat',cursive;font-size:20pt;font-weight:700;color:#2d3436;border-bottom:2px dotted #888;padding-bottom:1mm;display:inline-block;min-width:28mm}
-.columns{display:flex;gap:3mm;align-items:flex-start}
-.col{display:flex;flex-direction:column;gap:2mm}
-.col-pkt{min-height:240mm}
+.columns{display:flex;gap:3mm;align-items:flex-start;flex:1}
+.col{display:flex;flex-direction:column;gap:0}
+.col-pkt{min-height:220mm}
 .col-hdr{border-radius:14px;padding:5px 8px;font-size:13pt;font-weight:800;text-align:center;color:#fff;margin-bottom:3mm}
 .hdr-grn{background:#7a9e7e}
 .hdr-lav{background:#9b8ec4;font-size:15pt}
-.chore-card{background:#fff;border:1.5px solid #ddd;border-radius:9px;display:flex;align-items:flex-start;padding:2.5mm 2.5mm 2.5mm 2mm;gap:1.5mm;break-inside:avoid;margin-bottom:1.5mm}
-.chore-icon{font-size:15pt;width:8mm;flex-shrink:0;text-align:center;line-height:1;padding-top:0.5mm}
-.chore-txt{flex:1;min-width:0}
+.chore-card{background:#fff;border:1.5px solid #ddd;border-radius:9px;display:flex;align-items:flex-start;padding:2mm;gap:1.5mm;break-inside:avoid;margin-bottom:1.5mm}
+.chore-icon{font-size:14pt;width:7mm;flex-shrink:0;text-align:center;line-height:1;padding-top:0.5mm}
+.chore-txt{flex:1;min-width:0;padding-top:0.5mm}
 .c-name{font-size:7.5pt;font-weight:800;color:#2d3436;line-height:1.35}
-.c-desc{font-size:6pt;color:#636e72;margin-top:0.8mm;line-height:1.3}
+.c-desc{font-size:6pt;color:#636e72;margin-top:0.5mm;line-height:1.3}
 .day-col{display:flex;flex-direction:column;gap:1mm;flex-shrink:0}
-.day-box{border:1.2px solid #aaa;border-radius:3px;width:10.5mm;padding:0.8mm 0;text-align:center;font-size:6pt;font-weight:700;color:#555;background:#fff;line-height:1}
-.pkt-box{background:#ede9f8;border-radius:10px;padding:4mm;flex:1}
+.day-row-item{display:flex;flex-direction:row;align-items:center;gap:1mm}
+.day-lbl-box{border:1.2px solid #999;border-radius:2px;width:9mm;padding:0.7mm 0;text-align:center;font-size:5.5pt;font-weight:800;color:#444;background:#f5f2ec;line-height:1;white-space:nowrap}
+.day-check-box{border:1.2px solid #999;border-radius:2px;width:5mm;height:5mm;background:#fff;flex-shrink:0}
+.pkt-box{background:#ede9f8;border-radius:10px;padding:4mm;margin-bottom:3mm}
 .pkt-title{font-size:12pt;font-weight:900;color:#4a3d7a;margin-bottom:3mm;font-style:italic}
 .pkt-box p{font-size:7pt;margin-bottom:2mm;line-height:1.5;color:#3d3560}
 .pkt-bold{font-weight:900;font-size:7.5pt;color:#2d2550;margin-top:2.5mm!important}
@@ -304,6 +519,11 @@ body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-web
 .pig-row{text-align:center;margin-top:3mm;display:flex;align-items:center;justify-content:center;gap:3mm}
 .pig-em{font-size:14pt}
 .pig-line{display:inline-block;border-bottom:1.5px solid #888;width:25mm;margin-bottom:2px}
+/* PREGOVOR FOOTER */
+.preg-footer{margin-top:6mm;padding:4mm 5mm;background:#e8f0e9;border-radius:11px;border-left:4px solid #7a9e7e;display:flex;align-items:flex-start;gap:4mm}
+.preg-icon{font-size:16pt;flex-shrink:0;margin-top:0.5mm}
+.preg-text{font-size:9pt;font-style:italic;font-weight:700;color:#2d4a2f;line-height:1.5}
+.preg-pomen{font-size:7pt;color:#5a7a5c;margin-top:1.5mm;font-style:normal;font-weight:600}
 @media print{body{background:#f0ede4}}
 </style></head>
 <body><div class="page">
@@ -312,6 +532,7 @@ body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-web
   <div class="wk-blk"><div class="wk-lbl">${month}:</div><div class="wk-val">${week}.teden</div></div>
 </div>
 <div class="columns">${pktCol}${childCols}</div>
+${pregHtml}
 </div>
 <script>document.fonts.ready.then(()=>setTimeout(()=>window.print(),500));<\/script>
 </body></html>`;
@@ -321,7 +542,9 @@ body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-web
   win.document.open();win.document.write(html);win.document.close();
 }
 
-renderTabs();renderPanel();
+renderTabs();
+renderPanel();
+updatePktPreview();
 </script>
 </body>
 </html>

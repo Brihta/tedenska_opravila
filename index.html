@@ -331,7 +331,10 @@ function renderTabs(){
   add.addEventListener('click',()=>{children.push(mkChild());activeTab=children.length-1;renderTabs();renderPanel();});
   bar.appendChild(add);
   updatePktPreview();
-  renderPktInputs();
+  // Only re-render pkt inputs if count changed (add/remove child), not on tab switch
+  if(document.getElementById('pkt-inputs').children.length !== children.length){
+    renderPktInputs();
+  }
 }
 
 function renderPanel(){
@@ -369,7 +372,10 @@ function renderPanel(){
     children[activeTab].name=this.value;
     const tabs=document.querySelectorAll('.tab');
     if(tabs[activeTab]){const sp=tabs[activeTab].querySelector('span');if(sp)sp.textContent=this.value||`Otrok ${activeTab+1}`;}
-    renderPktInputs();
+    // Update only the label in pkt-inputs, not the whole input (to preserve typed values)
+    const pktLabels=document.querySelectorAll('#pkt-inputs .pkt-r label');
+    if(pktLabels[activeTab]) pktLabels[activeTab].textContent=(this.value||`Otrok ${activeTab+1}`)+':';
+    updatePktPreview();
   });
   p.querySelectorAll('.chore-head').forEach(el=>{
     el.addEventListener('click',function(e){if(e.target.classList.contains('chore-cb'))return;const ci=+this.dataset.ci;children[activeTab].chores[ci].enabled=!children[activeTab].chores[ci].enabled;renderPanel();});

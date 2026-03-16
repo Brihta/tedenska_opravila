@@ -403,18 +403,21 @@ function receiveVerb(){
 }
 function updatePktPreview(){
   const amt=parseFloat(document.getElementById('pkt-amt').value)||0;
-  const ded=calcDeduction(amt);
   const verb=receiveVerb();
-  const total=totalTaskDays();
   const preview=document.getElementById('pkt-preview');
   if(!amt){preview.innerHTML='Vnesite znesek žepnine.';return;}
+  const named=children.filter(c=>c.name.trim());
+  const dedLines = named.map(ch=>{
+    const total=ch.chores.filter(c=>c.enabled).reduce((s,c)=>s+c.days.length,0);
+    if(!total) return `<strong>${ch.name}:</strong> <em style="color:#a08080">Ni izbranih opravil.</em>`;
+    const ded=Math.floor(amt/total*10)/10;
+    return `<strong>Za vsako neopravljeno delo prejme ${ch.name} ${ded.toFixed(2).replace('.',',')} € manj.</strong>`+
+      `<span style="font-weight:400;font-size:.8em;color:#7a6aaa"> (${amt.toFixed(2)}€ ÷ ${total} = ${(amt/total).toFixed(4)}€ → ↓0,10€)</span>`;
+  }).join('<br>');
   preview.innerHTML=
-    `<strong>Nedeljski dogovor:</strong> Če so vsa opravila narejena, ${verb} <strong>${amt.toFixed(2)} €</strong>.<br>`+
+    `<strong>Nedeljski dogovor:</strong> Če so vsa opravila narejena, ${verb} <strong>${amt.toFixed(2).replace('.',',')} €</strong>.<br>`+
     `<strong>Brez opravljenih del, žepnine ni!</strong><br>`+
-    (total>0
-      ?`<strong>Za vsako neopravljeno delo se odšteje ${ded.toFixed(2)} €.</strong>`+
-        `<span style="font-weight:400;font-size:.8em;color:#7a6aaa"> (${amt.toFixed(2)}€ ÷ ${total} opravil = ${(amt/total).toFixed(4)}€ → zaokroženo navzdol na 0,10€)</span>`
-      :`<em style="color:#a08080">Izberite opravila in dneve za izračun odbitka.</em>`);
+    (dedLines || `<em style="color:#a08080">Izberite opravila in dneve za izračun odbitka.</em>`);
 }
 
 /* ── GENERATE ───────────────────────────────────────────────────────────── */
@@ -434,14 +437,21 @@ function generatePrint(){
 
   const totalAll = valid.reduce((s,ch)=>s+ch.chores.filter(c=>c.enabled).reduce((a,c)=>a+c.days.length,0),0);
 
+  // Per-child deduction lines for left column
+  const childDedLines = valid.map(ch => {
+    const chTotal = ch.chores.filter(c=>c.enabled).reduce((s,c)=>s+c.days.length,0);
+    const chDed = chTotal > 0 ? Math.floor(pktAmt/chTotal*10)/10 : 0;
+    return `<p class="pkt-bold">Za vsako neopravljeno delo prejme ${esc(ch.name)} ${chDed.toFixed(2).replace('.',',')} € manj.</p>`;
+  }).join('');
+
   const pktCol=`<div class="col col-pkt" style="width:${pktW}%">
     <div class="col-hdr hdr-lav">Opravila</div>
     <div class="pkt-box">
       <div class="pkt-title">Žepnina</div>
-      <p>Tedenska žepnina je določena na <strong>${pktAmt.toFixed(2)} €</strong>.</p>
-      <p style="margin-top:5px">Nedeljski dogovor:<br>Če so vsa opravila narejena, ${verb} <strong>${pktAmt.toFixed(2)} €</strong>.</p>
+      <p>Tedenska žepnina je določena na <strong>${pktAmt.toFixed(2).replace('.',',')} €</strong>.</p>
+      <p style="margin-top:5px">Nedeljski dogovor:<br>Če so vsa opravila narejena, ${verb} <strong>${pktAmt.toFixed(2).replace('.',',')} €</strong>.</p>
       <p class="pkt-bold">Brez opravljenih del, žepnine ni!</p>
-      <p class="pkt-bold">Za vsako neopravljeno delo se odšteje ${ded.toFixed(2)} €.</p>
+      ${childDedLines}
     </div>
     <div class="skupaj-wrap">
       <div class="skupaj-bar">Skupaj vseh opravil: ${totalAll}</div>
@@ -504,8 +514,8 @@ body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-web
 .col-hdr{border-radius:14px;padding:5px 8px;font-size:13pt;font-weight:800;text-align:center;color:#fff;margin-bottom:3mm}
 .hdr-grn{background:#7a9e7e}
 .hdr-lav{background:#9b8ec4;font-size:15pt}
-.chore-card{background:#fff;border:1.5px solid #ddd;border-radius:9px;display:flex;align-items:flex-start;padding:2mm;gap:1.5mm;break-inside:avoid;margin-bottom:1.5mm}
-.chore-icon{font-size:14pt;width:7mm;flex-shrink:0;text-align:center;line-height:1;padding-top:0.5mm}
+.chore-card{background:#fff;border:1.5px solid #ddd;border-radius:9px;display:flex;align-items:flex-start;padding:2mm 2mm 2mm 1.5mm;gap:2mm;break-inside:avoid;margin-bottom:1.5mm}
+.chore-icon{font-size:26pt;width:12mm;flex-shrink:0;text-align:center;line-height:1;padding-top:1mm}
 .chore-txt{flex:1;min-width:0;padding-top:0.5mm}
 .c-name{font-size:7.5pt;font-weight:800;color:#2d3436;line-height:1.35}
 .c-desc{font-size:6pt;color:#636e72;margin-top:0.5mm;line-height:1.3}

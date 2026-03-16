@@ -3,661 +3,325 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tedenska hišna opravila – ustvarjalnik obrazca</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<title>Tedenska hišna opravila</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --sage: #7a9e7e;
-    --sage-light: #a8c5a0;
-    --sage-pale: #e8f0e9;
-    --lavender: #9b8ec4;
-    --lavender-light: #c5bcdf;
-    --lavender-pale: #ede9f8;
-    --cream: #f5f0e8;
-    --warm-white: #fafaf7;
-    --dark: #2d3436;
-    --mid: #636e72;
-    --accent: #e17055;
-    --yellow: #fdcb6e;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--cream);
-    color: var(--dark);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--sage);
-    padding: 28px 40px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.12);
-  }
-  header .logo { font-size: 2.6rem; }
-  header h1 {
-    font-family: 'Caveat', cursive;
-    font-size: 2.2rem;
-    color: #fff;
-    line-height: 1.1;
-  }
-  header h1 span { font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,.75); display: block; }
-
-  /* ── MAIN LAYOUT ── */
-  main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--warm-white);
-    border-radius: 20px;
-    padding: 28px 32px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.07);
-    border: 2px solid transparent;
-    transition: border-color .2s;
-  }
-  .card:focus-within { border-color: var(--sage-light); }
-
-  .card-title {
-    font-size: 1.15rem;
-    font-weight: 900;
-    color: var(--sage);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .card-title .num {
-    background: var(--sage);
-    color: #fff;
-    border-radius: 50%;
-    width: 28px; height: 28px;
-    display: grid; place-items: center;
-    font-size: .85rem;
-    font-weight: 800;
-    flex-shrink: 0;
-  }
-
-  /* ── FORM BASICS ── */
-  label.field-label {
-    font-weight: 700;
-    font-size: .9rem;
-    color: var(--mid);
-    display: block;
-    margin-bottom: 6px;
-    margin-top: 16px;
-  }
-  label.field-label:first-child { margin-top: 0; }
-
-  input[type="text"], input[type="number"], select {
-    width: 100%;
-    padding: 10px 14px;
-    border: 2px solid #e0ddd8;
-    border-radius: 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--dark);
-    background: var(--cream);
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  input[type="text"]:focus, input[type="number"]:focus {
-    border-color: var(--sage);
-    box-shadow: 0 0 0 3px rgba(122,158,126,.15);
-  }
-
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media(max-width:600px){ .row { grid-template-columns: 1fr; } }
-
-  /* ── CHILDREN LIST ── */
-  #children-list { display: flex; flex-direction: column; gap: 10px; }
-  .child-row {
-    display: flex; align-items: center; gap: 10px;
-  }
-  .child-row input { flex: 1; }
-  .btn-icon {
-    background: none; border: none; cursor: pointer;
-    font-size: 1.3rem; padding: 4px; border-radius: 8px;
-    transition: background .15s;
-  }
-  .btn-icon:hover { background: #f0ebe0; }
-
-  /* ── ADD CHILD ── */
-  .btn-add {
-    margin-top: 12px;
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--sage-pale);
-    border: 2px dashed var(--sage-light);
-    border-radius: 12px;
-    padding: 9px 18px;
-    font-family: 'Nunito', sans-serif;
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--sage);
-    cursor: pointer;
-    transition: background .15s;
-  }
-  .btn-add:hover { background: #d6e8d7; }
-
-  /* ── CHORES ── */
-  #chores-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .chore-item {
-    border: 2px solid #e8e4dc;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  .chore-item.active { border-color: var(--sage-light); box-shadow: 0 2px 12px rgba(122,158,126,.15); }
-
-  .chore-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px;
-    cursor: pointer;
-    background: var(--cream);
-    user-select: none;
-  }
-  .chore-header:hover { background: #ede8de; }
-
-  .chore-checkbox {
-    width: 22px; height: 22px;
-    accent-color: var(--sage);
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
-  .chore-emoji { font-size: 1.4rem; flex-shrink: 0; }
-
-  .chore-name-wrap { flex: 1; }
-  .chore-name {
-    font-weight: 700; font-size: .95rem;
-    color: var(--dark);
-  }
-  .chore-desc { font-size: .78rem; color: var(--mid); margin-top: 1px; }
-
-  .chore-expand { font-size: .8rem; color: var(--mid); transition: transform .2s; }
-  .chore-item.active .chore-expand { transform: rotate(180deg); }
-
-  /* ── DAYS PICKER ── */
-  .chore-days {
-    display: none;
-    padding: 12px 16px 14px;
-    background: var(--sage-pale);
-    border-top: 2px solid var(--sage-light);
-  }
-  .chore-item.active .chore-days { display: block; }
-  .days-label { font-size: .8rem; font-weight: 700; color: var(--sage); margin-bottom: 8px; }
-  .days-grid {
-    display: flex; flex-wrap: wrap; gap: 6px;
-  }
-  .day-btn {
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 2px solid var(--sage-light);
-    background: #fff;
-    font-family: 'Nunito', sans-serif;
-    font-size: .82rem;
-    font-weight: 700;
-    color: var(--sage);
-    cursor: pointer;
-    transition: background .15s, color .15s;
-  }
-  .day-btn.sel {
-    background: var(--sage);
-    color: #fff;
-    border-color: var(--sage);
-  }
-  .day-btn-all {
-    background: var(--lavender-pale);
-    border-color: var(--lavender-light);
-    color: var(--lavender);
-  }
-  .day-btn-all.sel {
-    background: var(--lavender);
-    border-color: var(--lavender);
-    color: #fff;
-  }
-
-  /* ── CUSTOM CHORE ── */
-  .custom-chore-add {
-    display: flex; gap: 10px; align-items: center;
-    margin-top: 12px;
-  }
-  .custom-chore-add input { flex: 1; }
-  .btn-add-chore {
-    background: var(--sage);
-    color: #fff;
-    border: none; border-radius: 12px;
-    padding: 10px 18px;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: .9rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background .15s;
-  }
-  .btn-add-chore:hover { background: #6a8e6e; }
-
-  /* ── ŽEPNINA ── */
-  .pocket-opts { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-  .pocket-row { display: flex; align-items: center; gap: 12px; }
-  .pocket-row input[type="checkbox"] {
-    width: 20px; height: 20px; accent-color: var(--lavender); cursor: pointer;
-  }
-  .pocket-row label { font-weight: 700; font-size: .95rem; flex: 1; }
-  .pocket-row input[type="number"] { max-width: 100px; }
-
-  /* ── GENERATE ── */
-  .btn-generate {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--sage) 0%, var(--sage-light) 100%);
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 900;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    box-shadow: 0 6px 20px rgba(122,158,126,.35);
-    transition: transform .15s, box-shadow .15s;
-  }
-  .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(122,158,126,.4); }
-  .btn-generate:active { transform: translateY(0); }
-
-  /* ── NOTICE ── */
-  .notice {
-    background: var(--lavender-pale);
-    border-left: 4px solid var(--lavender);
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: .88rem;
-    color: #5a4f8a;
-    font-weight: 600;
-  }
+:root{--sage:#7a9e7e;--sage-l:#a8c5a0;--sage-p:#e8f0e9;--lav:#9b8ec4;--lav-l:#c5bcdf;--lav-p:#ede9f8;--cream:#f5f0e8;--white:#fafaf7;--dark:#2d3436;--mid:#636e72}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+header{background:var(--sage);padding:22px 36px;display:flex;align-items:center;gap:16px;box-shadow:0 4px 18px rgba(0,0,0,.13)}
+header .logo{font-size:2.2rem}
+header h1{font-family:'Caveat',cursive;font-size:2rem;color:#fff;line-height:1.1}
+header h1 small{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:rgba(255,255,255,.75);display:block}
+main{max-width:940px;margin:0 auto;padding:36px 18px 80px;display:flex;flex-direction:column;gap:28px}
+.card{background:var(--white);border-radius:18px;padding:26px 30px;box-shadow:0 4px 22px rgba(0,0,0,.07)}
+.card-title{font-size:1.1rem;font-weight:900;color:var(--sage);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.num{background:var(--sage);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:.82rem;font-weight:800;flex-shrink:0}
+.fl{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+label.lbl{font-weight:700;font-size:.88rem;color:var(--mid);display:block;margin-bottom:5px}
+input[type=text],input[type=number]{padding:9px 13px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--dark);background:var(--cream);outline:none;transition:border-color .2s}
+input:focus{border-color:var(--sage)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.tab{padding:8px 18px;border-radius:20px;border:2px solid #ddd;background:#f0ebe0;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;color:var(--mid);transition:all .2s;position:relative}
+.tab.active{background:var(--sage);border-color:var(--sage);color:#fff}
+.tab .del{position:absolute;top:-7px;right:-7px;background:#e17055;color:#fff;border:none;border-radius:50%;width:19px;height:19px;font-size:.75rem;cursor:pointer;display:none;align-items:center;justify-content:center;font-weight:900;line-height:1}
+.tab:hover .del{display:flex}
+.btn-add-tab{padding:8px 16px;border-radius:20px;border:2px dashed var(--sage-l);background:var(--sage-p);color:var(--sage);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer}
+.child-name-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f0ebe0}
+.chore-list{display:flex;flex-direction:column;gap:8px}
+.chore-item{border:2px solid #e8e4dc;border-radius:14px;overflow:hidden;transition:border-color .2s}
+.chore-item.on{border-color:var(--sage-l);box-shadow:0 2px 10px rgba(122,158,126,.13)}
+.chore-head{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;background:var(--cream);user-select:none}
+.chore-head:hover{background:#ede8de}
+.chore-cb{width:20px;height:20px;accent-color:var(--sage);cursor:pointer;flex-shrink:0}
+.chore-em{font-size:1.3rem;flex-shrink:0}
+.chore-nw{flex:1}
+.chore-n{font-weight:700;font-size:.9rem}
+.chore-d{font-size:.75rem;color:var(--mid);margin-top:1px}
+.arr{font-size:.75rem;color:var(--mid);transition:transform .2s}
+.chore-item.on .arr{transform:rotate(180deg)}
+.chore-days{display:none;padding:10px 14px 12px;background:var(--sage-p);border-top:2px solid var(--sage-l)}
+.chore-item.on .chore-days{display:block}
+.day-lbl{font-size:.78rem;font-weight:800;color:var(--sage);margin-bottom:7px}
+.day-row{display:flex;flex-wrap:wrap;gap:5px}
+.d{padding:4px 11px;border-radius:18px;border:2px solid var(--sage-l);background:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;color:var(--sage);cursor:pointer;transition:all .15s}
+.d.s{background:var(--sage);color:#fff;border-color:var(--sage)}
+.d.all{background:var(--lav-p);border-color:var(--lav-l);color:var(--lav)}
+.d.all.s{background:var(--lav);border-color:var(--lav);color:#fff}
+.custom-row{display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:14px;border-top:2px dashed #e0ddd8;flex-wrap:wrap}
+.custom-row input[type=text]:first-child{max-width:58px;text-align:center;font-size:1.2rem}
+.btn-sm{background:var(--sage);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;cursor:pointer;white-space:nowrap}
+.btn-sm:hover{background:#6a8e6e}
+.pkt-rows{display:flex;flex-direction:column;gap:10px}
+.pkt-r{display:flex;align-items:center;gap:12px}
+.pkt-r input[type=checkbox]{width:19px;height:19px;accent-color:var(--lav);cursor:pointer}
+.pkt-r label{font-weight:700;font-size:.9rem;flex:1}
+.pkt-r input[type=number]{max-width:95px}
+#pkt-extra{display:none;padding-top:14px;flex-direction:column;gap:10px}
+.btn-gen{width:100%;padding:16px;background:linear-gradient(135deg,var(--sage),var(--sage-l));color:#fff;border:none;border-radius:18px;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(122,158,126,.35);transition:transform .15s,box-shadow .15s}
+.btn-gen:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(122,158,126,.4)}
+.notice{background:var(--lav-p);border-left:4px solid var(--lav);border-radius:11px;padding:11px 15px;font-size:.85rem;color:#5a4f8a;font-weight:600}
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">🏠</div>
-  <h1>
-    Tedenska hišna opravila
-    <span>Ustvarjalnik obrazca za tiskanje</span>
-  </h1>
+  <h1>Tedenska hišna opravila <small>Ustvarjalnik obrazca za tiskanje</small></h1>
 </header>
-
 <main>
 
-  <!-- STEP 1 -->
   <div class="card">
     <div class="card-title"><span class="num">1</span> Osnovni podatki</div>
-
-    <label class="field-label">Teden v letu</label>
-    <input type="number" id="week-num" min="1" max="53" value="" placeholder="npr. 12" style="max-width:160px">
-
-    <label class="field-label" style="margin-top:20px">Ime(na) otrok</label>
-    <div id="children-list">
-      <div class="child-row">
-        <input type="text" placeholder="Ime otroka" class="child-name">
-        <button class="btn-icon" onclick="removeChild(this)" title="Odstrani">✕</button>
-      </div>
+    <div class="fl">
+      <div><label class="lbl">Mesec</label><input type="text" id="inp-month" value="Marec" style="width:140px"></div>
+      <div><label class="lbl">Teden v mesecu</label><select id="inp-week" style="width:130px;padding:9px 13px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--dark);background:var(--cream);outline:none"><option value="">izberi</option><option value="1">1. teden</option><option value="2">2. teden</option><option value="3">3. teden</option><option value="4">4. teden</option><option value="5">5. teden</option></select></div>
     </div>
-    <button class="btn-add" onclick="addChild()">＋ Dodaj otroka</button>
   </div>
 
-  <!-- STEP 2 -->
   <div class="card">
-    <div class="card-title"><span class="num">2</span> Opravila in dnevi</div>
-    <div class="notice" style="margin-bottom:18px">Odkljukajte opravilo in izberite dneve, ko naj bi ga otrok opravil. Opravila z označenimi dnevi bodo vključena v obrazec.</div>
-
-    <div id="chores-list"></div>
-
-    <div style="margin-top:18px">
-      <div class="days-label" style="color:var(--mid); font-size:.85rem; margin-bottom:8px">Dodaj lastno opravilo:</div>
-      <div class="custom-chore-add">
-        <input type="text" id="custom-emoji" placeholder="🧹" style="max-width:64px; text-align:center; font-size:1.3rem">
-        <input type="text" id="custom-name" placeholder="Ime opravila">
-        <input type="text" id="custom-desc" placeholder="Opis (neobvezno)">
-        <button class="btn-add-chore" onclick="addCustomChore()">Dodaj</button>
-      </div>
-    </div>
+    <div class="card-title"><span class="num">2</span> Otroci in njihova opravila</div>
+    <div class="notice" style="margin-bottom:18px">Za vsakega otroka posebej izberite opravila in dneve. Kliknite na zavihek z imenom otroka da preklopite.</div>
+    <div class="tabs" id="tabs-bar"></div>
+    <div id="child-panel"></div>
   </div>
 
-  <!-- STEP 3 – ŽEPNINA -->
   <div class="card">
     <div class="card-title"><span class="num">3</span> Žepnina (neobvezno)</div>
-    <div class="pocket-opts">
-      <div class="pocket-row">
-        <input type="checkbox" id="pocket-enable">
-        <label for="pocket-enable">Vključi razdelek o žepnini</label>
-      </div>
-      <div id="pocket-details" style="display:none; padding:12px 0 0 32px; display:none; flex-direction:column; gap:10px;">
-        <div class="pocket-row">
-          <label for="pocket-amount">Tedenska žepnina (€):</label>
-          <input type="number" id="pocket-amount" min="0" step="0.5" value="5" style="max-width:100px">
-        </div>
-        <div class="pocket-row">
-          <input type="checkbox" id="pocket-penalty" checked>
-          <label for="pocket-penalty">Odbitek za neopravljeno opravilo (€):</label>
-          <input type="number" id="pocket-penalty-amt" min="0" step="0.1" value="0.20" style="max-width:100px">
-        </div>
-        <div>
-          <label class="field-label" style="margin-top:0">Dodatno besedilo / pravila:</label>
-          <input type="text" id="pocket-note" placeholder="npr. Brez opravljenega dela ni žepnine!">
-        </div>
+    <div class="pkt-rows">
+      <div class="pkt-r"><input type="checkbox" id="pkt-on"><label for="pkt-on">Vključi razdelek o žepnini</label></div>
+      <div id="pkt-extra">
+        <div class="pkt-r"><label for="pkt-amt">Tedenska žepnina (€):</label><input type="number" id="pkt-amt" min="0" step="0.5" value="5"></div>
+        <div class="pkt-r"><input type="checkbox" id="pkt-pen" checked><label for="pkt-pen">Vključi odbitek za neopravljeno opravilo</label></div>
+        <div class="pkt-r" id="pen-amt-row"><label for="pkt-pen-amt">Znesek odbitka (€):</label><input type="number" id="pkt-pen-amt" min="0" step="0.1" value="0.20"></div>
+        <div><label class="lbl" style="margin-top:0">Nedeljski dogovor / opis pravil:</label><input type="text" id="pkt-note" placeholder="npr. Če so vsa opravila narejena, prejmeta 5€." style="width:100%"></div>
+        <div><label class="lbl" style="margin-top:0">Opozorilo (krepko):</label><input type="text" id="pkt-warn" placeholder="npr. Brez opravljenega dela ni žepnine!" style="width:100%"></div>
+        <div><label class="lbl" style="margin-top:0">Besedilo o odbitku (krepko):</label><input type="text" id="pkt-penalty-txt" placeholder="npr. Za vsako opravilo, ki ni narejeno, se odšteje 20 centov." style="width:100%"></div>
       </div>
     </div>
   </div>
 
-  <button class="btn-generate" onclick="generatePDF()">
-    📄 Ustvari PDF za tiskanje
-  </button>
-
+  <button class="btn-gen" onclick="generatePrint()">📄 Ustvari PDF za tiskanje</button>
 </main>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
-const DAYS = ['pon.','tor.','sre.','čet.','pet.','sob.','ned.'];
-const DAYS_FULL = ['Ponedeljek','Torek','Sreda','Četrtek','Petek','Sobota','Nedelja'];
-
-const DEFAULT_CHORES = [
-  { emoji:'🍽️', name:'Pomivalni stroj', desc:'Polnjenje in praznjenje' },
-  { emoji:'🗑️', name:'Smeti', desc:'Odnašanje in ločevanje odpadkov' },
-  { emoji:'🌿', name:'Rastline', desc:'Zalivanje rož' },
-  { emoji:'🚗', name:'Avto', desc:'Pomoč pri čiščenju' },
-  { emoji:'🧹', name:'Stopnice / hodnik', desc:'Pometanje in urejanje' },
-  { emoji:'🧺', name:'Perilo', desc:'Zlaganje in razvrščanje perila' },
-  { emoji:'🪣', name:'Sesanje', desc:'Sesanje celotnega stanovanja' },
-  { emoji:'🧴', name:'Prah', desc:'Brisanje prahu po pohištvu' },
-  { emoji:'🪞', name:'Ogledala', desc:'Čiščenje vseh ogledal' },
-  { emoji:'🏡', name:'Dvorišče', desc:'Pometanje ali urejanje zunanjosti' },
-  { emoji:'🛏️', name:'Postelja', desc:'Postiljanje vsak dan' },
-  { emoji:'🍳', name:'Pomoč pri kuhanju', desc:'Priprava obroka' },
+const DAYS=['pon.','tor.','sre.','čet.','pet.','sob.','ned.'];
+const DEF=[
+  {emoji:'🍽️',name:'Pomivalni stroj',desc:'Polnjenje in praznjenje'},
+  {emoji:'🗑️',name:'Smeti',desc:'Odnašanje in ločevanje'},
+  {emoji:'🌿',name:'Rastline',desc:'Zalivanje vseh rož'},
+  {emoji:'🚗',name:'Avto',desc:'Pomoč pri čiščenju'},
+  {emoji:'🧹',name:'Stopnice / hodnik',desc:'Pometanje in urejanje'},
+  {emoji:'🧺',name:'Perilo',desc:'Zlaganje in razvrščanje perila'},
+  {emoji:'🪣',name:'Sesanje',desc:'Sesanje celotnega stanovanja'},
+  {emoji:'🧴',name:'Prah',desc:'Brisanje prahu po pohištvu'},
+  {emoji:'🪞',name:'Ogledala',desc:'Čiščenje vseh ogledal'},
+  {emoji:'🏡',name:'Dvorišče',desc:'Pometanje ali čiščenje zunaj'},
+  {emoji:'🛏️',name:'Postelja',desc:'Postiljanje vsak dan'},
+  {emoji:'🍳',name:'Pomoč pri kuhanju',desc:'Priprava obroka'},
 ];
+function mkChild(){return{name:'',chores:DEF.map(c=>({...c,enabled:false,days:[]}))}}
+let activeTab=0;
+let children=[mkChild()];
 
-let chores = DEFAULT_CHORES.map(c => ({
-  ...c,
-  enabled: false,
-  days: [],
-}));
+function renderTabs(){
+  const bar=document.getElementById('tabs-bar');
+  bar.innerHTML='';
+  children.forEach((ch,i)=>{
+    const t=document.createElement('button');
+    t.className='tab'+(i===activeTab?' active':'');
+    const nameSpan=document.createElement('span');
+    nameSpan.textContent=ch.name||`Otrok ${i+1}`;
+    t.appendChild(nameSpan);
+    t.addEventListener('click',()=>{activeTab=i;renderTabs();renderPanel();});
+    if(children.length>1){
+      const x=document.createElement('button');
+      x.className='del';x.textContent='×';
+      x.addEventListener('click',e=>{e.stopPropagation();children.splice(i,1);if(activeTab>=children.length)activeTab=children.length-1;renderTabs();renderPanel();});
+      t.appendChild(x);
+    }
+    bar.appendChild(t);
+  });
+  const add=document.createElement('button');
+  add.className='btn-add-tab';add.textContent='＋ Dodaj otroka';
+  add.addEventListener('click',()=>{children.push(mkChild());activeTab=children.length-1;renderTabs();renderPanel();});
+  bar.appendChild(add);
+}
 
-// ── RENDER CHORES ──────────────────────────────────────────────────────────
-function renderChores() {
-  const list = document.getElementById('chores-list');
-  list.innerHTML = '';
-  chores.forEach((c, i) => {
-    const item = document.createElement('div');
-    item.className = 'chore-item' + (c.enabled ? ' active' : '');
-    item.innerHTML = `
-      <div class="chore-header" onclick="toggleChore(${i})">
-        <input class="chore-checkbox" type="checkbox" ${c.enabled?'checked':''} onclick="event.stopPropagation(); checkChore(${i})">
-        <span class="chore-emoji">${c.emoji}</span>
-        <div class="chore-name-wrap">
-          <div class="chore-name">${c.name}</div>
-          ${c.desc ? `<div class="chore-desc">${c.desc}</div>` : ''}
-        </div>
-        <span class="chore-expand">▾</span>
+function renderPanel(){
+  const ch=children[activeTab];
+  const p=document.getElementById('child-panel');
+  let h=`<div class="child-name-row">
+    <label class="lbl" style="margin:0;white-space:nowrap">Ime otroka:</label>
+    <input type="text" value="${esc(ch.name)}" placeholder="Vpiši ime..." style="max-width:280px" id="nameInput">
+  </div><div class="chore-list">`;
+  ch.chores.forEach((c,ci)=>{
+    h+=`<div class="chore-item${c.enabled?' on':''}">
+      <div class="chore-head" data-ci="${ci}">
+        <input class="chore-cb" type="checkbox" ${c.enabled?'checked':''} data-ci="${ci}">
+        <span class="chore-em">${c.emoji}</span>
+        <div class="chore-nw"><div class="chore-n">${esc(c.name)}</div>${c.desc?`<div class="chore-d">${esc(c.desc)}</div>`:''}</div>
+        <span class="arr">▾</span>
       </div>
       <div class="chore-days">
-        <div class="days-label">Izberi dneve:</div>
-        <div class="days-grid">
-          <button class="day-btn day-btn-all${c.days.length===7?' sel':''}" onclick="toggleAllDays(${i})">Vsak dan</button>
-          ${DAYS.map((d,di)=>`<button class="day-btn${c.days.includes(di)?' sel':''}" onclick="toggleDay(${i},${di})">${d}</button>`).join('')}
+        <div class="day-lbl">Izberi dneve:</div>
+        <div class="day-row">
+          <button class="d all${c.days.length===7?' s':''}" data-ci="${ci}" data-all="1">Vsak dan</button>
+          ${DAYS.map((d,di)=>`<button class="d${c.days.includes(di)?' s':''}" data-ci="${ci}" data-di="${di}">${d}</button>`).join('')}
         </div>
-      </div>`;
-    list.appendChild(item);
+      </div>
+    </div>`;
+  });
+  h+=`</div><div class="custom-row">
+    <input type="text" id="cem" placeholder="🧹">
+    <input type="text" id="cnm" placeholder="Ime opravila" style="flex:1">
+    <input type="text" id="cds" placeholder="Opis (neobvezno)" style="flex:1.5">
+    <button class="btn-sm" id="addChoreBtn">＋ Dodaj</button>
+  </div>`;
+  p.innerHTML=h;
+  p.querySelector('#nameInput').addEventListener('input',function(){
+    children[activeTab].name=this.value;
+    const tabs=document.querySelectorAll('.tab');
+    if(tabs[activeTab]){const sp=tabs[activeTab].querySelector('span');if(sp)sp.textContent=this.value||`Otrok ${activeTab+1}`;}
+  });
+  p.querySelectorAll('.chore-head').forEach(el=>{
+    el.addEventListener('click',function(e){if(e.target.classList.contains('chore-cb'))return;const ci=+this.dataset.ci;children[activeTab].chores[ci].enabled=!children[activeTab].chores[ci].enabled;renderPanel();});
+  });
+  p.querySelectorAll('.chore-cb').forEach(el=>{
+    el.addEventListener('change',function(){const ci=+this.dataset.ci;children[activeTab].chores[ci].enabled=this.checked;renderPanel();});
+  });
+  p.querySelectorAll('[data-all]').forEach(el=>{
+    el.addEventListener('click',function(){const ci=+this.dataset.ci;const ch=children[activeTab].chores[ci];ch.days=ch.days.length===7?[]:[0,1,2,3,4,5,6];renderPanel();});
+  });
+  p.querySelectorAll('[data-di]').forEach(el=>{
+    el.addEventListener('click',function(){const ci=+this.dataset.ci;const di=+this.dataset.di;const arr=children[activeTab].chores[ci].days;const idx=arr.indexOf(di);if(idx===-1)arr.push(di);else arr.splice(idx,1);arr.sort((a,b)=>a-b);renderPanel();});
+  });
+  p.querySelector('#addChoreBtn').addEventListener('click',()=>{
+    const em=document.getElementById('cem').value.trim()||'⭐';
+    const nm=document.getElementById('cnm').value.trim();
+    const ds=document.getElementById('cds').value.trim();
+    if(!nm){alert('Vnesite ime opravila.');return;}
+    children[activeTab].chores.push({emoji:em,name:nm,desc:ds,enabled:true,days:[]});
+    renderPanel();
   });
 }
 
-function toggleChore(i) {
-  chores[i].enabled = !chores[i].enabled;
-  renderChores();
-}
-function checkChore(i) {
-  chores[i].enabled = !chores[i].enabled;
-  renderChores();
-}
-function toggleDay(ci, di) {
-  const idx = chores[ci].days.indexOf(di);
-  if (idx === -1) chores[ci].days.push(di);
-  else chores[ci].days.splice(idx, 1);
-  chores[ci].days.sort((a,b)=>a-b);
-  renderChores();
-}
-function toggleAllDays(ci) {
-  if (chores[ci].days.length === 7) chores[ci].days = [];
-  else chores[ci].days = [0,1,2,3,4,5,6];
-  renderChores();
-}
-
-// ── CHILDREN ──────────────────────────────────────────────────────────────
-function addChild() {
-  const list = document.getElementById('children-list');
-  const row = document.createElement('div');
-  row.className = 'child-row';
-  row.innerHTML = `<input type="text" placeholder="Ime otroka" class="child-name">
-    <button class="btn-icon" onclick="removeChild(this)">✕</button>`;
-  list.appendChild(row);
-}
-function removeChild(btn) {
-  const rows = document.querySelectorAll('.child-row');
-  if (rows.length > 1) btn.closest('.child-row').remove();
-}
-
-// ── POCKET MONEY ──────────────────────────────────────────────────────────
-document.getElementById('pocket-enable').addEventListener('change', function() {
-  const d = document.getElementById('pocket-details');
-  d.style.display = this.checked ? 'flex' : 'none';
+document.getElementById('pkt-on').addEventListener('change',function(){
+  document.getElementById('pkt-extra').style.display=this.checked?'flex':'none';
 });
 
-// ── CUSTOM CHORE ──────────────────────────────────────────────────────────
-function addCustomChore() {
-  const emoji = document.getElementById('custom-emoji').value.trim() || '⭐';
-  const name = document.getElementById('custom-name').value.trim();
-  const desc = document.getElementById('custom-desc').value.trim();
-  if (!name) { alert('Prosimo, vnesite ime opravila.'); return; }
-  chores.push({ emoji, name, desc, enabled: true, days: [] });
-  document.getElementById('custom-emoji').value = '';
-  document.getElementById('custom-name').value = '';
-  document.getElementById('custom-desc').value = '';
-  renderChores();
-  document.getElementById('chores-list').lastChild.scrollIntoView({ behavior:'smooth', block:'center' });
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function generatePrint(){
+  const month=document.getElementById('inp-month').value.trim()||'Marec';
+  const week=document.getElementById('inp-week').value.trim();
+  const valid=children.filter(c=>c.name.trim());
+  if(!week){alert('Vnesite številko tedna.');return;}
+  if(!valid.length){alert('Dodajte vsaj enega otroka z imenom.');return;}
+  if(valid.every(c=>c.chores.every(ch=>!ch.enabled))){alert('Izberite vsaj eno opravilo.');return;}
+
+  const pktOn=document.getElementById('pkt-on').checked;
+  const pktAmt=parseFloat(document.getElementById('pkt-amt').value)||5;
+  const penOn=document.getElementById('pkt-pen').checked;
+  const penAmt=parseFloat(document.getElementById('pkt-pen-amt').value)||0.20;
+  const pktNote=document.getElementById('pkt-note').value.trim();
+  const pktWarn=document.getElementById('pkt-warn').value.trim();
+  const pktPenTxt=document.getElementById('pkt-penalty-txt').value.trim();
+
+  const pktW=pktOn?22:0;
+  const childW=((100-pktW)/valid.length).toFixed(1);
+
+  let pktCol='';
+  if(pktOn){
+    pktCol=`<div class="col col-pkt" style="width:${pktW}%">
+      <div class="col-hdr hdr-lav">Opravila</div>
+      <div class="pkt-box">
+        <div class="pkt-title">Žepnina</div>
+        <p>Tedenska žepnina je določena na <strong>${pktAmt.toFixed(2)} €</strong>.</p>
+        ${pktNote?`<p style="margin-top:5px">${pktNote}</p>`:''}
+        ${pktWarn?`<p class="pkt-bold">${pktWarn}</p>`:''}
+        ${penOn?(pktPenTxt?`<p class="pkt-bold">${pktPenTxt}</p>`:`<p class="pkt-bold">Za vsako neopravljeno opravilo se odšteje ${penAmt.toFixed(2)} €.</p>`):''}
+      </div>
+      <div class="skupaj-wrap">
+        <div class="skupaj-bar">Skupaj kljukic:</div>
+        <div class="pig-row"><span class="pig-em">🐷</span><span class="pig-line"></span></div>
+      </div>
+    </div>`;
+  }
+
+  const childCols=valid.map(ch=>{
+    const active=ch.chores.filter(c=>c.enabled);
+    const cards=active.map(c=>{
+      const dayBoxes=c.days.map(di=>`<div class="day-box">${DAYS[di]}</div>`).join('');
+      return `<div class="chore-card">
+        <div class="chore-icon">${c.emoji}</div>
+        <div class="chore-txt"><div class="c-name">${esc(c.name)}</div>${c.desc?`<div class="c-desc">${esc(c.desc)}</div>`:''}</div>
+        <div class="day-col">${dayBoxes}</div>
+      </div>`;
+    }).join('');
+    return `<div class="col col-child" style="width:${childW}%">
+      <div class="col-hdr hdr-grn">${esc(ch.name)}</div>
+      ${cards}
+      <div class="skupaj-wrap">
+        <div class="skupaj-bar">Skupaj kljukic:</div>
+        <div class="pig-row"><span class="pig-em">🐷</span><span class="pig-line"></span></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const html=`<!DOCTYPE html>
+<html lang="sl"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito','Arial',sans-serif;background:#f0ede4;width:190mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{padding:1mm}
+.pg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5mm;padding-bottom:3mm;border-bottom:1.5px solid #ccc8bf}
+.t-it{font-style:italic;font-size:26pt;color:#2d3436;font-weight:700;line-height:1;font-family:'Nunito',Arial,sans-serif}
+.t-bd{font-size:22pt;font-weight:900;color:#2d3436;line-height:1.1}
+.wk-blk{text-align:right;padding-top:3mm}
+.wk-lbl{font-size:8.5pt;color:#888;font-weight:600;margin-bottom:1mm}
+.wk-val{font-family:'Caveat',cursive;font-size:20pt;font-weight:700;color:#2d3436;border-bottom:2px dotted #888;padding-bottom:1mm;display:inline-block;min-width:28mm}
+.columns{display:flex;gap:3mm;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:2mm}
+.col-pkt{min-height:240mm}
+.col-hdr{border-radius:14px;padding:5px 8px;font-size:13pt;font-weight:800;text-align:center;color:#fff;margin-bottom:3mm}
+.hdr-grn{background:#7a9e7e}
+.hdr-lav{background:#9b8ec4;font-size:15pt}
+.chore-card{background:#fff;border:1.5px solid #ddd;border-radius:9px;display:flex;align-items:flex-start;padding:2.5mm 2.5mm 2.5mm 2mm;gap:1.5mm;break-inside:avoid;margin-bottom:1.5mm}
+.chore-icon{font-size:15pt;width:8mm;flex-shrink:0;text-align:center;line-height:1;padding-top:0.5mm}
+.chore-txt{flex:1;min-width:0}
+.c-name{font-size:7.5pt;font-weight:800;color:#2d3436;line-height:1.35}
+.c-desc{font-size:6pt;color:#636e72;margin-top:0.8mm;line-height:1.3}
+.day-col{display:flex;flex-direction:column;gap:1mm;flex-shrink:0}
+.day-box{border:1.2px solid #aaa;border-radius:3px;width:10.5mm;padding:0.8mm 0;text-align:center;font-size:6pt;font-weight:700;color:#555;background:#fff;line-height:1}
+.pkt-box{background:#ede9f8;border-radius:10px;padding:4mm;flex:1}
+.pkt-title{font-size:12pt;font-weight:900;color:#4a3d7a;margin-bottom:3mm;font-style:italic}
+.pkt-box p{font-size:7pt;margin-bottom:2mm;line-height:1.5;color:#3d3560}
+.pkt-bold{font-weight:900;font-size:7.5pt;color:#2d2550;margin-top:2.5mm!important}
+.skupaj-wrap{margin-top:4mm}
+.skupaj-bar{background:#9b8ec4;border-radius:9px;padding:3px 10px;color:#fff;font-size:8pt;font-weight:800;text-align:center}
+.pig-row{text-align:center;margin-top:3mm;display:flex;align-items:center;justify-content:center;gap:3mm}
+.pig-em{font-size:14pt}
+.pig-line{display:inline-block;border-bottom:1.5px solid #888;width:25mm;margin-bottom:2px}
+@media print{body{background:#f0ede4}}
+</style></head>
+<body><div class="page">
+<div class="pg-hdr">
+  <div><div class="t-it">Tedenska</div><div class="t-bd">hišna opravila</div></div>
+  <div class="wk-blk"><div class="wk-lbl">${month}:</div><div class="wk-val">${week}.teden</div></div>
+</div>
+<div class="columns">${pktCol}${childCols}</div>
+</div>
+<script>document.fonts.ready.then(()=>setTimeout(()=>window.print(),500));<\/script>
+</body></html>`;
+
+  const win=window.open('','_blank');
+  if(!win){alert('Dovolite pojavna okna za to stran (pop-ups).');return;}
+  win.document.open();win.document.write(html);win.document.close();
 }
 
-// ── PDF GENERATION ─────────────────────────────────────────────────────────
-function generatePDF() {
-  const { jsPDF } = window.jspdf;
-
-  const weekNum = document.getElementById('week-num').value;
-  const children = [...document.querySelectorAll('.child-name')].map(i => i.value.trim()).filter(Boolean);
-  const activeChores = chores.filter(c => c.enabled);
-
-  if (!weekNum) { alert('Prosimo, vnesite številko tedna.'); return; }
-  if (children.length === 0) { alert('Prosimo, dodajte vsaj enega otroka.'); return; }
-  if (activeChores.length === 0) { alert('Prosimo, izberite vsaj eno opravilo.'); return; }
-
-  const pocketEnabled = document.getElementById('pocket-enable').checked;
-  const pocketAmt = parseFloat(document.getElementById('pocket-amount').value) || 5;
-  const penaltyEnabled = document.getElementById('pocket-penalty').checked;
-  const penaltyAmt = parseFloat(document.getElementById('pocket-penalty-amt').value) || 0.20;
-  const pocketNote = document.getElementById('pocket-note').value.trim();
-
-  // ── PDF per child ──
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const W = 210, H = 297;
-
-  children.forEach((childName, ci) => {
-    if (ci > 0) doc.addPage();
-
-    // Background
-    doc.setFillColor(245, 240, 232); // cream
-    doc.rect(0, 0, W, H, 'F');
-
-    // Header bar
-    doc.setFillColor(122, 158, 126); // sage
-    doc.roundedRect(0, 0, W, 38, 0, 0, 'F');
-
-    // Title
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bolditalic');
-    doc.setFontSize(24);
-    doc.text('Tedenska hišna opravila', 14, 20);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    doc.text(`Marec / teden: ${weekNum}.`, 14, 31);
-
-    // Child name badge
-    doc.setFillColor(155, 142, 196); // lavender
-    doc.roundedRect(W - 70, 6, 60, 26, 5, 5, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.setTextColor(255,255,255);
-    doc.text(childName, W - 40, 22, { align: 'center' });
-
-    // ── CHORES TABLE ──
-    const colX = 14;
-    let y = 48;
-    const rowH = 12;
-    const colNameW = pocketEnabled ? 72 : 90;
-    const dayW = (W - colX - colNameW - 14) / 7;
-
-    // Column headers
-    doc.setFillColor(168, 197, 160);
-    doc.roundedRect(colX, y, W - colX - 14, rowH, 4, 4, 'F');
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(50, 80, 50);
-    doc.text('Opravilo', colX + 4, y + 8);
-    DAYS.forEach((d, di) => {
-      doc.text(d, colX + colNameW + di * dayW + dayW / 2, y + 8, { align: 'center' });
-    });
-    y += rowH + 2;
-
-    // Rows
-    activeChores.forEach((chore, ri) => {
-      const bg = ri % 2 === 0 ? [250,248,244] : [240,245,241];
-      doc.setFillColor(...bg);
-      doc.rect(colX, y, W - colX - 14, rowH, 'F');
-
-      // Chore name
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(45, 52, 54);
-      const label = chore.emoji + ' ' + chore.name + (chore.desc ? ` (${chore.desc})` : '');
-      const lines = doc.splitTextToSize(label, colNameW - 4);
-      doc.text(lines[0], colX + 4, y + 8);
-
-      // Day boxes
-      DAYS.forEach((_, di) => {
-        const bx = colX + colNameW + di * dayW + 1;
-        const by = y + 2;
-        const bw = dayW - 2;
-        const bh = rowH - 4;
-
-        if (chore.days.includes(di)) {
-          doc.setFillColor(122, 158, 126);
-          doc.roundedRect(bx, by, bw, bh, 2, 2, 'F');
-          // Checkbox tick
-          doc.setDrawColor(255,255,255);
-          doc.setLineWidth(0.8);
-          const cx = bx + bw/2, cy2 = by + bh/2;
-          doc.line(cx - 2.5, cy2, cx - 0.8, cy2 + 2);
-          doc.line(cx - 0.8, cy2 + 2, cx + 2.5, cy2 - 2);
-        } else {
-          doc.setFillColor(255,255,255);
-          doc.setDrawColor(200,200,200);
-          doc.setLineWidth(0.4);
-          doc.roundedRect(bx, by, bw, bh, 2, 2, 'FD');
-        }
-      });
-      y += rowH;
-    });
-
-    // Total row
-    y += 4;
-    doc.setFillColor(155, 142, 196);
-    doc.roundedRect(colX, y, W - colX - 14, 10, 3, 3, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(255,255,255);
-    doc.text('Skupaj kljukic:', colX + 4, y + 7);
-    doc.text('______', colX + colNameW + 10, y + 7);
-    y += 18;
-
-    // ── POCKET MONEY ──
-    if (pocketEnabled) {
-      doc.setFillColor(237, 233, 248);
-      doc.roundedRect(colX, y, W - colX - 14, pocketNote ? 52 : 42, 6, 6, 'F');
-      doc.setDrawColor(155, 142, 196);
-      doc.setLineWidth(0.6);
-      doc.roundedRect(colX, y, W - colX - 14, pocketNote ? 52 : 42, 6, 6, 'D');
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(13);
-      doc.setTextColor(91, 71, 142);
-      doc.text('💰 Žepnina', colX + 8, y + 12);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(60, 50, 100);
-      doc.text(`Tedenska žepnina: ${pocketAmt.toFixed(2)} €`, colX + 8, y + 22);
-      if (penaltyEnabled) {
-        doc.text(`Odbitek za neopravljeno opravilo: −${penaltyAmt.toFixed(2)} €`, colX + 8, y + 31);
-      }
-      if (pocketNote) {
-        doc.setFont('helvetica', 'bolditalic');
-        doc.setFontSize(9);
-        const noteLines = doc.splitTextToSize(pocketNote, W - colX - 30);
-        doc.text(noteLines, colX + 8, y + (penaltyEnabled ? 41 : 32));
-      }
-
-      // Piggy icon placeholder
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(22);
-      doc.setTextColor(155, 142, 196);
-      doc.text('🐷', W - 30, y + 30);
-
-      y += (pocketNote ? 52 : 42) + 10;
-    }
-
-    // ── SIGNATURE ──
-    const sigY = Math.max(y + 10, H - 30);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    doc.setTextColor(150, 140, 130);
-    doc.text(`Otrok: ___________________________`, colX, sigY);
-    doc.text(`Starš: ___________________________`, W / 2 + 10, sigY);
-
-    // Footer line
-    doc.setDrawColor(200,195,185);
-    doc.setLineWidth(0.4);
-    doc.line(colX, H - 12, W - 14, H - 12);
-    doc.setFontSize(7.5);
-    doc.setTextColor(180,170,160);
-    doc.text('Tedenska hišna opravila · ustvarjeno za tiskanje', W / 2, H - 7, { align:'center' });
-  });
-
-  doc.save(`hisna-opravila-teden${weekNum}.pdf`);
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────
-renderChores();
+renderTabs();renderPanel();
 </script>
 </body>
 </html>

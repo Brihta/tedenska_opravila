@@ -300,11 +300,19 @@ function renderPktInputs(){
   if(!wrap)return;
   wrap.innerHTML=children.map((ch,i)=>`
     <div class="pkt-r">
-      <label style="font-weight:700;font-size:.9rem;min-width:120px">${ch.name||`Otrok ${i+1}`}:</label>
-      <input type="number" min="0" step="0.5" value="${ch.amt||5}" style="max-width:90px;padding:8px 12px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;background:var(--cream);outline:none"
-        data-ci="${i}" oninput="children[${i}].amt=parseFloat(this.value)||0;updatePktPreview()">
+      <label style="font-weight:700;font-size:.9rem;min-width:120px" id="pkt-lbl-${i}">${ch.name||`Otrok ${i+1}`}:</label>
+      <input type="number" id="pkt-inp-${i}" min="0" step="0.5" value="${ch.amt!=null?ch.amt:5}"
+        style="max-width:90px;padding:8px 12px;border:2px solid #e0ddd8;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;background:var(--cream);outline:none">
       <span style="font-size:.85rem;color:var(--mid);font-weight:600">€ / teden</span>
     </div>`).join('');
+  // Attach proper event listeners
+  children.forEach((_,i)=>{
+    const inp=document.getElementById(`pkt-inp-${i}`);
+    if(inp) inp.addEventListener('input',function(){
+      children[i].amt=parseFloat(this.value)||0;
+      updatePktPreview();
+    });
+  });
   updatePktPreview();
 }
 
@@ -449,6 +457,12 @@ function generatePrint(){
   if(!week){alert('Izberite teden.');return;}
   if(!valid.length){alert('Dodajte vsaj enega otroka z imenom.');return;}
   if(valid.every(c=>c.chores.every(ch=>!ch.enabled))){alert('Izberite vsaj eno opravilo.');return;}
+
+  // Sync amounts from DOM inputs (safety net against stale data)
+  children.forEach((_,i)=>{
+    const inp=document.getElementById(`pkt-inp-${i}`);
+    if(inp) children[i].amt=parseFloat(inp.value)||0;
+  });
 
   const verb=receiveVerb();
   const pktW=22;
